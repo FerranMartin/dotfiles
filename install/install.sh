@@ -9,7 +9,7 @@ echo "\033[0m"
 
 
 echo "Installing xcode-stuff"
-# xcode-select --install
+xcode-select --install
 
 echo " "
 echo "Installing HomeBrew..."
@@ -17,62 +17,62 @@ echo "Installing HomeBrew..."
 # Install if we don't have it
 if test ! $(which brew); then
 	echo "HomeBrew not found -> installing..."
-#   ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+  	ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 fi
 
 # Update homebrew recipes
 echo "Updating homebrew..."
-# brew update
+brew update
 
 echo " "
 echo "Installing Git..."
-# brew install git
+brew install git
 
 echo "Git config"
-# git config --global user.name "Ferran Martin"
-# git config --global user.email ferran@ferranmartins.es
+git config --global user.name "Ferran Martin"
+git config --global user.email ferran@ferranmartins.es
 
 echo "Installing brew git utilities..."
-# brew install git-extras
-# brew install legit
-# brew install git-flow
+brew install git-extras
+brew install legit
+brew install git-flow
 
 echo " "
 echo "Installing other brew stuff..."
-# brew install tig
-# brew install tree
-# brew install wget
-# brew install trash
-# brew install svn
-# brew install node
-# brew install cowsay
-# brew install fortune
+brew install tig
+brew install tree
+brew install wget
+brew install trash
+brew install svn
+brew install node
+brew install cowsay
+brew install fortune
 
 echo " "
 echo "Cleaning up brew"
-# brew cleanup
+brew cleanup
 
 echo " "
 echo "Installing homebrew cask"
-# brew install caskroom/cask/brew-cask
+brew install caskroom/cask/brew-cask
 
 
 # Install MacOSX apps
-source apps.sh
+sh apps.sh
 
 
 #Install Oh My ZSH
 #Install Zsh & Oh My Zsh
 echo " "
 echo "Installing Oh My ZSH..."
-sh ~/dotfiles/.oh-my-zsh/tools/install.sh
+sh .oh-my-zsh/tools/install.sh
 
 echo "Setting ZSH as shell..."
 chsh -s /bin/zsh
 
 echo " "
 echo "Setting some Mac settings..."
-
+#TODO
 
 killall Finder
 
