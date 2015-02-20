@@ -62,14 +62,18 @@ echo "Install MacOSX apps..."
 sh ~/.dotfiles/install/apps.sh
 
 
-#Install Oh My ZSH
-#Install Zsh & Oh My Zsh
 echo " "
-echo "Installing Oh My ZSH..."
+echo "Installing Zsh & Oh My Zsh..."
 sh ~/.dotfiles/install/oh-my-zsh/tools/install.sh
 
 echo "Setting ZSH as shell..."
 chsh -s /bin/zsh
+
+
+echo " "
+echo "Create all Symlinks..."
+sh ~/.dotfiles/install/symlinks.sh
+
 
 echo " "
 echo "Setting some Mac settings..."
