@@ -57,15 +57,16 @@ echo "Installing homebrew cask"
 brew install caskroom/cask/brew-cask
 
 
-# Install MacOSX apps
-sh apps.sh
+echo " "
+echo "Install MacOSX apps..."
+sh ~/.dotfiles/install/apps.sh
 
 
 #Install Oh My ZSH
 #Install Zsh & Oh My Zsh
 echo " "
 echo "Installing Oh My ZSH..."
-sh oh-my-zsh/tools/install.sh
+sh ~/.dotfiles/oh-my-zsh/tools/install.sh
 
 echo "Setting ZSH as shell..."
 chsh -s /bin/zsh
