@@ -11,7 +11,7 @@ echo "\033[0m"
 echo "Installing xcode-stuff"
 # xcode-select --install
 
-
+echo " "
 echo "Installing HomeBrew..."
 # Check for Homebrew,
 # Install if we don't have it
@@ -24,6 +24,7 @@ fi
 echo "Updating homebrew..."
 # brew update
 
+echo " "
 echo "Installing Git..."
 # brew install git
 
@@ -36,6 +37,7 @@ echo "Installing brew git utilities..."
 # brew install legit
 # brew install git-flow
 
+echo " "
 echo "Installing other brew stuff..."
 # brew install tig
 # brew install tree
@@ -46,8 +48,33 @@ echo "Installing other brew stuff..."
 # brew install cowsay
 # brew install fortune
 
+echo " "
 echo "Cleaning up brew"
 # brew cleanup
 
+echo " "
 echo "Installing homebrew cask"
 # brew install caskroom/cask/brew-cask
+
+
+# Install MacOSX apps
+source apps.sh
+
+
+#Install Oh My ZSH
+#Install Zsh & Oh My Zsh
+echo " "
+echo "Installing Oh My ZSH..."
+sh ~/dotfiles/.oh-my-zsh/tools/install.sh
+
+echo "Setting ZSH as shell..."
+chsh -s /bin/zsh
+
+echo " "
+echo "Setting some Mac settings..."
+
+
+killall Finder
+
+echo "\033[1m\033[35m"
+echo "Done!"
