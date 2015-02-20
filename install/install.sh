@@ -66,7 +66,7 @@ sh ~/.dotfiles/install/apps.sh
 #Install Zsh & Oh My Zsh
 echo " "
 echo "Installing Oh My ZSH..."
-sh ~/.dotfiles/oh-my-zsh/tools/install.sh
+sh ~/.dotfiles/install/oh-my-zsh/tools/install.sh
 
 echo "Setting ZSH as shell..."
 chsh -s /bin/zsh
