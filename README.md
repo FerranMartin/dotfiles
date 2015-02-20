@@ -32,7 +32,10 @@ $ sh install/install.sh
 	* `oh-my-zsh` Submodule checkout of [Oh My Zsh](https://	github.com/robbyrussell/oh-my-zsh).
 	
 * **`dotfiles/`** folder with all configuration files to create the symlinks. Contains:
-	* `.vimrc` Vim settings.
+	* `vimrc` Vim settings.
+	* `zshrc` [Zsh](http://www.zsh.org/) & [Oh My Zsh](https://github.com/robbyrussell/oh-my-zsh) settings.
+	* `gitconfig` global *Git* configurations.
+	* `gitignore_global` A global *gitignore* configuration.
 
 
 ## Thanks
