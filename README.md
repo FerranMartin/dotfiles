@@ -17,13 +17,22 @@ My personal dotfiles :)
 ## Install
 Run this:
 
-```sh
-git clone https://github.com/FerranMartin/dotfiles ~/.dotfiles
-cd ~/.dotfiles
-sh install/install.sh
+```
+$ git clone https://github.com/FerranMartin/dotfiles ~/.dotfiles
+$ cd ~/.dotfiles
+$ sh install/install.sh
 ```
 
 ##Contents
+
+* **`install/`** Scripts to install all. Contains:
+ 	* **`install.sh`** to install and configure all _(xcode-stuff, homebrew, git, zsh, set of brew stuff, set of mac apps, etc)_. This script use the follow scripts
+	* `apps.sh` to install a list of basic MacOSX apps
+	* `symlinks.sh` to create all symlinks from *`dotfiles`*
+	* `oh-my-zsh` Submodule checkout of [Oh My Zsh](https://	github.com/robbyrussell/oh-my-zsh).
+	
+* **`dotfiles/`** folder with all configuration files to create the symlinks. Contains:
+	* `.vimrc` Vim settings.
 
 
 ## Thanks
