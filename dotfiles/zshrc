@@ -7,7 +7,7 @@
 #	 ██████ ██████ ░██  ░██░███   ░░█████
 #	░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
 
-ZSH=$HOME/.dotfiles/install/oh-my-zsh # Path to your oh-my-zsh configuration.
+ZSH=$HOME/.dotfiles/oh-my-zsh # Path to your oh-my-zsh configuration.
 ZSH_THEME="robbyrussell" # Set name of the theme to load.
 
 DEFAULT_USER="ferran@ferranmartins.es"
