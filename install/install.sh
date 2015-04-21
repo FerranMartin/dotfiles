@@ -53,7 +53,8 @@ sh ~/.dotfiles/install/symlinks.sh
 
 echo " "
 echo "Setting some Mac settings..."
-#TODO
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool YES
+#TODO: add more
 
 killall Finder
 
