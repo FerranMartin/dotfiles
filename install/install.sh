@@ -53,7 +53,10 @@ sh ~/.dotfiles/install/symlinks.sh
 
 echo " "
 echo "Setting some Mac settings..."
+#Show directory path on Finder
 defaults write com.apple.finder _FXShowPosixPathInTitle -bool YES
+#Enable selection in QuickLook
+defaults write com.apple.finder QLEnableTextSelection -bool TRUE
 #TODO: add more
 
 killall Finder
