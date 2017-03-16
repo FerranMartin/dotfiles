@@ -1,8 +1,8 @@
 [user]
 	name = Ferran Martin
-	email = ferran@ferranmartins.es
+	email = ferranmatin@gmail.com
 [core]
-	excludesfile = /Users/ferranmartin/.gitignore_global
+	excludesfile = /Users/ferran/.gitignore_global
 [filter "media"]
 	clean = git-media-clean %f
 	smudge = git-media-smudge %f
@@ -16,6 +16,15 @@
   dump = cat-file -p
   dt = difftool
   dm = diffmerge
+	switch = !legit switch \"$@\"
+	branches = !legit branches
+	sprout = !legit sprout \"$@\"
+	unpublish = !legit unpublish \"$@\"
+	harvest = !legit harvest \"$@\"
+	sync = !legit sync \"$@\"
+	publish = !legit publish \"$@\"
+	graft = !legit graft \"$@\"
+    integrate = "!f() { git co $2; git pull; git fetch -p; git br -d $1 }; f"
 [diff]
 	tool = diffmerge
 [difftool "diffmerge"]
@@ -23,13 +32,19 @@
 [merge]
 	tool = diffmerge
 [mergetool "diffmerge"]
-	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$(if test -f \"$BASE\"; then echo \"$BASE\"; else echo \"$LOCAL\"; fi)\" \"$REMOTE\""
+	cmd = "diffmerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\""
 	trustExitCode = true
+[push]
+	default = simple
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
 [difftool "sourcetree"]
 	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
 	path = 
 [mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	cmd = /opt/homebrew-cask/Caskroom/diffmerge/4.2.0.697/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
 	trustExitCode = true
-[push]
-	default = simple
+[gui]
+	recentrepo = /Users/ferran/Dropbox/Feina/Clients/TQ CONSULTORS/WEB/new-web

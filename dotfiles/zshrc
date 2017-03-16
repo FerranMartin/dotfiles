@@ -30,3 +30,7 @@ source $ZSH/oh-my-zsh.sh
 # source ~/.dotfiles/dotfiles/.exports
 
 export PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
+export PATH="/Users/ferran/Library/Android/sdk/platform-tools":$PATH
+export PATH="/usr/local/bin:$PATH"
+export PATH="/Users/ferran/.dotfile/scripts:$PATH"
+export PATH="/usr/local/php5/bin:$PATH"
