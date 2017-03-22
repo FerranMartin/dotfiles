@@ -43,3 +43,11 @@
 	required = true
 [gui]
 	recentrepo = /Users/ferran/Dropbox/Feina/Clients/TQ CONSULTORS/WEB/new-web
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /opt/homebrew-cask/Caskroom/diffmerge/4.2.0.697/DiffMerge.app/Contents/MacOS/DiffMerge --merge --result=\"$MERGED\" \"$LOCAL\" \"$BASE\" \"$REMOTE\"
+	trustExitCode = true
+[commit]
+	template = /Users/ferran/.stCommitMsg
