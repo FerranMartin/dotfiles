@@ -1,4 +1,5 @@
 alias dropbox="cd ~/Dropbox"
 alias notifyDone='terminal-notifier -title "Terminal" -message "Done with task!"'
-alias vup="vagrant up && vagrant provision && vagrant ssh"
-alias vun='vagrant up && notifyDone'
+alias vup="vagrant up && vagrant provision && notifyDone && vagrant ssh"
+alias vu='vagrant up && notifyDone'
+alias vssh='vagrant ssh'
