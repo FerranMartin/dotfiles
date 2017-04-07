@@ -17,6 +17,7 @@ brew install node
 brew install cowsay
 brew install fortune
 brew install terminal-notifier
+brew install homebrew/php/wp-cli
 
 echo " "
 echo "Cleaning up brew"

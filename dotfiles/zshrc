@@ -34,3 +34,16 @@ export PATH="/Users/ferran/Library/Android/sdk/platform-tools":$PATH
 export PATH="/usr/local/bin:$PATH"
 export PATH="/Users/ferran/.dotfile/scripts:$PATH"
 export PATH="/usr/local/php5/bin:$PATH"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Add completions script for wp-cli
+autoload bashcompinit
+bashcompinit
+source ~/.dotfiles/scripts/wp-completion.bash
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
