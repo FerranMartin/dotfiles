@@ -45,5 +45,9 @@ autoload bashcompinit
 bashcompinit
 source ~/.dotfiles/scripts/wp-completion.bash
 
+source $(brew --prefix php-version)/php-version.sh && php-version 5
+
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
+
+eval $(thefuck --alias)
