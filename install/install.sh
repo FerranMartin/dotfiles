@@ -11,6 +11,9 @@ echo "\033[0m"
 echo "Installing xcode-stuff"
 xcode-select --install
 
+echo " "
+echo "Installing custom fonts (like Awesome-Terminal-Fonts)..."
+cp fonts/* /Library/Fonts
 
 echo " "
 echo "Installing Zsh & Oh My Zsh..."
