@@ -8,7 +8,7 @@
 #	░░░░░░ ░░░░░░  ░░   ░░ ░░░     ░░░░░
 
 ZSH=$HOME/.dotfiles/oh-my-zsh # Path to your oh-my-zsh configuration.
-ZSH_THEME="robbyrussell" # Set name of the theme to load.
+#ZSH_THEME="robbyrussell" # Set name of the theme to load.
 
 DEFAULT_USER="ferran@ferranmartins.es"
 COMPLETION_WAITING_DOTS="true"
@@ -57,6 +57,6 @@ source "$HOME/.antigen/antigen.zsh"
 
 antigen use oh-my-zsh
 antigen bundle arialdomartini/oh-my-git
-antigen theme arialdomartini/oh-my-git-themes oppa-lana-style
+antigen theme FerranMartin/oh-my-git-themes oppa-lana-style
 
 antigen apply
