@@ -9,9 +9,9 @@
 
 ZSH=$HOME/.dotfiles/oh-my-zsh # Path to your oh-my-zsh configuration.
 ZSH_CUSTOM=$HOME/.dotfiles/oh-my-zsh-custom # Path to my oh-my-zsh customizations.
-ZSH_THEME="oh-my-git-theme-ferran" # Set name of the theme to load.
+ZSH_THEME="agnoster" # Set name of the theme to load.
 
-DEFAULT_USER="ferran@ferranmartins.es"
+DEFAULT_USER="ferran"
 COMPLETION_WAITING_DOTS="true"
 DISABLE_AUTO_UPDATE=true
 
@@ -54,10 +54,10 @@ export PATH="$PATH:$HOME/.rvm/bin"
 eval $(thefuck --alias)
 
 #ANTIGEN
-source "$HOME/.antigen/antigen.zsh"
+#source "$HOME/.antigen/antigen.zsh"
 
-antigen use oh-my-zsh
-antigen bundle arialdomartini/oh-my-git
-#antigen theme FerranMartin/oh-my-git-themes oppa-lana-style
+#antigen use oh-my-zsh
+#antigen bundle arialdomartini/oh-my-git
+#antigen theme oh-my-git-theme-ferran
 
-antigen apply
+#antigen apply
