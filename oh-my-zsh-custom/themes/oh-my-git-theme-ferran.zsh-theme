@@ -1,4 +1,4 @@
-: ${omg_ungit_prompt:=$PS1}
+: ${omg_ungit_prompt:="%~ • "}
 : ${omg_second_line:="%~ • "}
 : ${omg_is_a_git_repo_symbol:=''}
 : ${omg_has_untracked_files_symbol:=''}        #                ?    
