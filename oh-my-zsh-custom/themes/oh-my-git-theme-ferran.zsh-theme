@@ -65,12 +65,16 @@ function custom_build_prompt {
 
 
     local black_on_white="%K{white}%F{black}"
+    local black_on_red="%K{red}%F{black}"
+    local black_on_orange="\033[48;5;166;m%F{black}"
     local yellow_on_white="%K{white}%F{yellow}"
+    local yellow_on_red="%K{red}%F{yellow}"
     local red_on_white="%K{white}%F{red}"
     local red_on_black="%K{black}%F{red}"
-    local black_on_red="%K{red}%F{black}"
     local white_on_red="%K{red}%F{white}"
-    local yellow_on_red="%K{red}%F{yellow}"
+    local white_on_orange="\033[48;5;166;m%F{white}"
+
+    local orange_on_white="%K{white}\033[38;5;166;m"
  
     # Flags
     local omg_default_color_on="${black_on_white}"
