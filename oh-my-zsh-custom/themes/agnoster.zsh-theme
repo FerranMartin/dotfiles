@@ -29,6 +29,21 @@
 # A few utility functions to make it easy and re-usable to draw segmented prompts
 
 CURRENT_BG='NONE'
+CURRENT_FG='NONE'
+
+LONG_LINE=true
+
+##COLORS
+ORANGE="166"
+LIGHT_GREY="245"
+
+##CHARS
+GIT_CHAR=''
+HAS_UNTRACKED_FILES_CHAR=''      #                ?    
+HAS_MODIFICATIONS_CHAR=''
+HAS_DELETIONS_CHAR=''
+HAS_ADDS_CHAR=''
+IS_READY_TO_COMMIT_CHAR=''       #   →
 
 # Special Powerline characters
 
@@ -60,7 +75,27 @@ prompt_segment() {
     echo -n "%{$bg%}%{$fg%} "
   fi
   CURRENT_BG=$1
+  CURRENT_FG=$2
   [[ -n $3 ]] && echo -n $3
+}
+
+# Depending on $1, print a symbol ($2) or a white space.
+# You can change the current foreground color with optional $3 argument
+prompt_char() {
+    local flag=$1
+    local symbol=$2
+    local color=${3:-$CURRENT_FG}
+
+    local no_symbol=' '
+    local space_between_chars='  '
+    if [[ $LONG_LINE == false ]] then 
+      no_symbol=''; 
+      space_between_chars=' ';
+    fi
+
+    if [[ $flag == false ]]; then symbol=$no_symbol; fi
+
+    echo -n "%F{$color}${symbol}$space_between_chars%F{$CURRENT_FG}"
 }
 
 # End the prompt, closing any open segments
@@ -72,6 +107,7 @@ prompt_end() {
   fi
   echo -n "%{%f%}"
   CURRENT_BG=''
+  CURRENT_FG=''
 }
 
 ### Prompt components
@@ -84,10 +120,35 @@ prompt_context() {
   fi
 }
 
+#Git status: stashed, added, modified or deleted files
+promp_git_status() {
+  (( $+commands[git] )) || return
+  if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
+    prompt_segment $LIGHT_GREY black "$GIT_CHAR  "
+
+    local git_status="$(git status --porcelain 2> /dev/null)"
+    local number_of_untracked_files=$(\grep -c "^??" <<< "${git_status}")
+
+    if [[ $git_status =~ ($'\n'|^).M ]]; then local has_modifications=true; fi
+    if [[ $git_status =~ ($'\n'|^).D ]]; then local has_deletions=true; fi
+    if [[ $git_status =~ ($'\n'|^)A ]]; then local has_adds=true; fi
+    if [[ $number_of_untracked_files -gt 0 ]]; then local has_untracked_files=true; fi
+    if [[ $git_status =~ ($'\n'|^)[MAD] && ! $git_status =~ ($'\n'|^).[MAD\?] ]]; then local ready_to_commit=true; fi
+
+    prompt_char ${has_untracked_files:-false} $HAS_UNTRACKED_FILES_CHAR red
+    prompt_char ${has_modifications:-false} $HAS_MODIFICATIONS_CHAR red
+    prompt_char ${has_deletions:-false} $HAS_DELETIONS_CHAR red
+    prompt_char ${has_adds:-false} $HAS_ADDS_CHAR
+    prompt_char ${ready_to_commit:-false} $IS_READY_TO_COMMIT_CHAR yellow
+
+  fi
+}
+
 # Git: branch/detached head, dirty status
 prompt_git() {
+  promp_git_status
+
   (( $+commands[git] )) || return
-  local GIT_CHAR=''
   local PL_BRANCH_CHAR
   () {
     local LC_ALL="" LC_CTYPE="en_US.UTF-8"
@@ -227,3 +288,4 @@ build_prompt() {
 }
 
 PROMPT='%{%f%b%k%}$(build_prompt) '
+
