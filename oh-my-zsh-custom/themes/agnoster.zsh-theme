@@ -87,6 +87,7 @@ prompt_context() {
 # Git: branch/detached head, dirty status
 prompt_git() {
   (( $+commands[git] )) || return
+  local GIT_CHAR=''
   local PL_BRANCH_CHAR
   () {
     local LC_ALL="" LC_CTYPE="en_US.UTF-8"
@@ -99,7 +100,7 @@ prompt_git() {
     dirty=$(parse_git_dirty)
     ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
     if [[ -n $dirty ]]; then
-      prompt_segment yellow black
+      prompt_segment red black
     else
       prompt_segment green black
     fi
