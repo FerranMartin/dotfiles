@@ -39,9 +39,11 @@ LIGHT_GREY="245"
 
 ##CHARS
 GIT_CHAR=''
-HAS_UNTRACKED_FILES_CHAR=''      #                ?    
+HAS_UNTRACKED_FILES_CHAR=''      #                ?    
 HAS_MODIFICATIONS_CHAR=''
+HAS_MODIFICATIONS_CACHED_CHAR=''
 HAS_DELETIONS_CHAR=''
+HAS_DELETIONS_CACHED_CHAR=''
 HAS_ADDS_CHAR=''
 IS_READY_TO_COMMIT_CHAR=''       #   →
 
@@ -130,7 +132,9 @@ promp_git_status() {
     local number_of_untracked_files=$(\grep -c "^??" <<< "${git_status}")
 
     if [[ $git_status =~ ($'\n'|^).M ]]; then local has_modifications=true; fi
+    if [[ $git_status =~ ($'\n'|^)M ]]; then local has_modifications_cached=true; fi
     if [[ $git_status =~ ($'\n'|^).D ]]; then local has_deletions=true; fi
+    if [[ $git_status =~ ($'\n'|^)D ]]; then local has_deletions_cached=true; fi
     if [[ $git_status =~ ($'\n'|^)A ]]; then local has_adds=true; fi
     if [[ $number_of_untracked_files -gt 0 ]]; then local has_untracked_files=true; fi
     if [[ $git_status =~ ($'\n'|^)[MAD] && ! $git_status =~ ($'\n'|^).[MAD\?] ]]; then local ready_to_commit=true; fi
@@ -138,7 +142,11 @@ promp_git_status() {
     prompt_char ${has_untracked_files:-false} $HAS_UNTRACKED_FILES_CHAR red
     prompt_char ${has_modifications:-false} $HAS_MODIFICATIONS_CHAR red
     prompt_char ${has_deletions:-false} $HAS_DELETIONS_CHAR red
+
     prompt_char ${has_adds:-false} $HAS_ADDS_CHAR
+    prompt_char ${has_modifications_cached:-false} $HAS_MODIFICATIONS_CACHED_CHAR
+    prompt_char ${has_deletions_cached:-false} $HAS_DELETIONS_CACHED_CHAR
+
     prompt_char ${ready_to_commit:-false} $IS_READY_TO_COMMIT_CHAR yellow
 
   fi
