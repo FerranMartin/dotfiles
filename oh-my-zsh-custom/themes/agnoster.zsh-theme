@@ -34,6 +34,7 @@ CURRENT_FG='NONE'
 LONG_LINE=true
 
 ##COLORS
+GREEN="76"
 ORANGE="166"
 LIGHT_GREY="245"
 
@@ -51,6 +52,7 @@ IS_READY_TO_COMMIT_CHAR=''         #   →
 CAN_FAST_FORWARD_CHAR=''
 SHOULD_PUSH_CHAR=''               #    
 DETACHED_CHAR=''
+IS_ON_A_TAG_CHAR=''                #   
 NOT_TRACKED_BRANCH_CHAR=''
 REBASE_TRACKING_BRANCH_CHAR=''    #   
 MERGE_TRACKING_BRANCH_CHAR=''     #  
@@ -167,13 +169,14 @@ promp_git_where() {
   if [[ -n $dirty ]]; then
     prompt_segment red black
   else
-    prompt_segment green black
+    prompt_segment $GREEN black
   fi
 
   local current_branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
   local current_commit_hash=$(git rev-parse HEAD 2> /dev/null)
   local upstream=$(git rev-parse --symbolic-full-name --abbrev-ref @{upstream} 2> /dev/null)
   local will_rebase=$(git config --get branch.${current_branch}.rebase 2> /dev/null)
+  local tag_at_current_commit=$(git describe --exact-match --tags $current_commit_hash 2> /dev/null)
 
   if [[ $current_branch == 'HEAD' ]]; then local detached=true; fi
   if [[ -n "${upstream}" && "${upstream}" != "@{upstream}" ]]; then local has_upstream=true; fi
@@ -184,6 +187,7 @@ promp_git_where() {
   fi
   if [[ $commits_ahead -gt 0 && $commits_behind -gt 0 ]]; then local has_diverged=true; fi
   if [[ $has_diverged == false && $commits_ahead -gt 0 ]]; then local should_push=true; fi
+  if [[ -n $tag_at_current_commit ]]; then local is_on_a_tag=true; fi
 
   if [[ $detached == true ]]; then
     prompt_char true $DETACHED_CHAR white
@@ -215,6 +219,8 @@ promp_git_where() {
       prompt_char true "(${current_branch} ${type_of_upstream} ${upstream//\/$current_branch/})"
     fi
   fi
+
+  prompt_char ${is_on_a_tag} "${IS_ON_A_TAG_CHAR} ${tag_at_current_commit}"
 }
 
 # Git: branch/detached head, dirty status
