@@ -22,6 +22,13 @@ sh ~/.dotfiles/oh-my-zsh/tools/install.sh
 echo "Setting ZSH as shell..."
 chsh -s /bin/zsh
 
+# Install Powerline fonts fot zsh themes (need test)
+git clone https://github.com/powerline/fonts.git --depth=1
+cd fonts
+./install.sh
+cd ..
+rm -rf fonts
+
 
 echo " "
 echo "Installing HomeBrew..."

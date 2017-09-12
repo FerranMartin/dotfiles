@@ -10,7 +10,7 @@ dir=~/.dotfiles/dotfiles 	# dotfiles directory
 olddir=~/.dotfiles_old 		# old dotfiles backup directory
 
 # list of files/folders to symlink in homedir
-files="vimrc zshrc gitconfig gitignore_global antigen"    					
+files="vimrc zshrc gitconfig gitignore_global antigen fonts"    					
 
 ##########
 
