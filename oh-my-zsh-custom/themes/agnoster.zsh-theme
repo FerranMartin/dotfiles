@@ -39,13 +39,21 @@ LIGHT_GREY="245"
 
 ##CHARS
 GIT_CHAR=''
-HAS_UNTRACKED_FILES_CHAR=''      #                ?    
+HAS_UNTRACKED_FILES_CHAR=''        #                ?    
 HAS_MODIFICATIONS_CHAR=''
 HAS_MODIFICATIONS_CACHED_CHAR=''
 HAS_DELETIONS_CHAR=''
 HAS_DELETIONS_CACHED_CHAR=''
 HAS_ADDS_CHAR=''
-IS_READY_TO_COMMIT_CHAR=''       #   →
+HAS_DIVERGED_CHAR=''              #   
+HAS_STASHES_CHAR=''
+IS_READY_TO_COMMIT_CHAR=''         #   →
+CAN_FAST_FORWARD_CHAR=''
+SHOULD_PUSH_CHAR=''               #    
+DETACHED_CHAR=''
+NOT_TRACKED_BRANCH_CHAR=''
+REBASE_TRACKING_BRANCH_CHAR=''    #   
+MERGE_TRACKING_BRANCH_CHAR=''     #  
 
 # Special Powerline characters
 
@@ -124,77 +132,138 @@ prompt_context() {
 
 #Git status: stashed, added, modified or deleted files
 promp_git_status() {
-  (( $+commands[git] )) || return
-  if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-    prompt_segment $LIGHT_GREY black "$GIT_CHAR  "
+  prompt_segment $LIGHT_GREY black "$GIT_CHAR  "
 
-    local git_status="$(git status --porcelain 2> /dev/null)"
-    local number_of_untracked_files=$(\grep -c "^??" <<< "${git_status}")
+  local git_status="$(git status --porcelain 2> /dev/null)"
+  local number_of_untracked_files=$(\grep -c "^??" <<< "${git_status}")
+  local number_of_stashes="$(git stash list -n1 2> /dev/null | wc -l)"
 
-    if [[ $git_status =~ ($'\n'|^).M ]]; then local has_modifications=true; fi
-    if [[ $git_status =~ ($'\n'|^)M ]]; then local has_modifications_cached=true; fi
-    if [[ $git_status =~ ($'\n'|^).D ]]; then local has_deletions=true; fi
-    if [[ $git_status =~ ($'\n'|^)D ]]; then local has_deletions_cached=true; fi
-    if [[ $git_status =~ ($'\n'|^)A ]]; then local has_adds=true; fi
-    if [[ $number_of_untracked_files -gt 0 ]]; then local has_untracked_files=true; fi
-    if [[ $git_status =~ ($'\n'|^)[MAD] && ! $git_status =~ ($'\n'|^).[MAD\?] ]]; then local ready_to_commit=true; fi
+  if [[ $git_status =~ ($'\n'|^).M ]]; then local has_modifications=true; fi
+  if [[ $git_status =~ ($'\n'|^)M ]]; then local has_modifications_cached=true; fi
+  if [[ $git_status =~ ($'\n'|^).D ]]; then local has_deletions=true; fi
+  if [[ $git_status =~ ($'\n'|^)D ]]; then local has_deletions_cached=true; fi
+  if [[ $git_status =~ ($'\n'|^)A ]]; then local has_adds=true; fi
+  if [[ $number_of_untracked_files -gt 0 ]]; then local has_untracked_files=true; fi
+  if [[ $git_status =~ ($'\n'|^)[MAD] && ! $git_status =~ ($'\n'|^).[MAD\?] ]]; then local ready_to_commit=true; fi
+  if [[ $number_of_stashes -gt 0 ]]; then local has_stashes=true; fi
 
-    prompt_char ${has_untracked_files:-false} $HAS_UNTRACKED_FILES_CHAR red
-    prompt_char ${has_modifications:-false} $HAS_MODIFICATIONS_CHAR red
-    prompt_char ${has_deletions:-false} $HAS_DELETIONS_CHAR red
+  prompt_char ${has_stashes:-false} $HAS_STASHES_CHAR yellow
 
-    prompt_char ${has_adds:-false} $HAS_ADDS_CHAR
-    prompt_char ${has_modifications_cached:-false} $HAS_MODIFICATIONS_CACHED_CHAR
-    prompt_char ${has_deletions_cached:-false} $HAS_DELETIONS_CACHED_CHAR
+  prompt_char ${has_untracked_files:-false} $HAS_UNTRACKED_FILES_CHAR red
+  prompt_char ${has_modifications:-false} $HAS_MODIFICATIONS_CHAR red
+  prompt_char ${has_deletions:-false} $HAS_DELETIONS_CHAR red
 
-    prompt_char ${ready_to_commit:-false} $IS_READY_TO_COMMIT_CHAR yellow
+  prompt_char ${has_adds:-false} $HAS_ADDS_CHAR
+  prompt_char ${has_modifications_cached:-false} $HAS_MODIFICATIONS_CACHED_CHAR
+  prompt_char ${has_deletions_cached:-false} $HAS_DELETIONS_CACHED_CHAR
 
+  prompt_char ${ready_to_commit:-false} $IS_READY_TO_COMMIT_CHAR yellow
+}
+
+# Git where: info about local branch, remote, etc
+promp_git_where() {
+  dirty=$(parse_git_dirty)
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
+  if [[ -n $dirty ]]; then
+    prompt_segment red black
+  else
+    prompt_segment green black
+  fi
+
+  local current_branch=$(git rev-parse --abbrev-ref HEAD 2> /dev/null)
+  local current_commit_hash=$(git rev-parse HEAD 2> /dev/null)
+  local upstream=$(git rev-parse --symbolic-full-name --abbrev-ref @{upstream} 2> /dev/null)
+  local will_rebase=$(git config --get branch.${current_branch}.rebase 2> /dev/null)
+
+  if [[ $current_branch == 'HEAD' ]]; then local detached=true; fi
+  if [[ -n "${upstream}" && "${upstream}" != "@{upstream}" ]]; then local has_upstream=true; fi
+  if [[ $has_upstream == true ]]; then
+    local commits_diff="$(git log --pretty=oneline --topo-order --left-right ${current_commit_hash}...${upstream} 2> /dev/null)"
+    local commits_ahead=$(\grep -c "^<" <<< "$commits_diff")
+    local commits_behind=$(\grep -c "^>" <<< "$commits_diff")
+  fi
+  if [[ $commits_ahead -gt 0 && $commits_behind -gt 0 ]]; then local has_diverged=true; fi
+  if [[ $has_diverged == false && $commits_ahead -gt 0 ]]; then local should_push=true; fi
+
+  if [[ $detached == true ]]; then
+    prompt_char true $DETACHED_CHAR white
+    prompt_char true "(${current_commit_hash:0:7})"
+  else
+    if [[ $has_upstream == false ]]; then
+      prompt_char true "-- ${NOT_TRACKED_BRANCH_CHAR}  --  (${current_branch})"
+    else
+      if [[ $will_rebase == true ]]; then
+        local type_of_upstream=$REBASE_TRACKING_BRANCH_CHAR
+      else
+        local type_of_upstream=$MERGE_TRACKING_BRANCH_CHAR
+      fi
+
+      if [[ $has_diverged == true ]]; then
+        prompt_char true "-${commits_behind} ${HAS_DIVERGED_CHAR} +${commits_ahead}" white
+      else
+        if [[ $commits_behind -gt 0 ]]; then
+          prompt_char true "-${commits_behind} %F{white}${CAN_FAST_FORWARD_CHAR}%F{$CURRENT_FG} --"
+        fi
+        if [[ $commits_ahead -gt 0 ]]; then
+          prompt_char true "-- %F{white}${SHOULD_PUSH_CHAR}%F{$CURRENT_FG}  +${commits_ahead}"
+        fi
+        if [[ $commits_ahead == 0 && $commits_behind == 0 ]]; then
+          prompt_char true " --   -- "
+        fi
+
+      fi
+      prompt_char true "(${current_branch} ${type_of_upstream} ${upstream//\/$current_branch/})"
+    fi
   fi
 }
 
 # Git: branch/detached head, dirty status
 prompt_git() {
-  promp_git_status
-
   (( $+commands[git] )) || return
-  local PL_BRANCH_CHAR
-  () {
-    local LC_ALL="" LC_CTYPE="en_US.UTF-8"
-    PL_BRANCH_CHAR=$'\ue0a0'         # 
-  }
-  local ref dirty mode repo_path
-  repo_path=$(git rev-parse --git-dir 2>/dev/null)
-
   if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
-    dirty=$(parse_git_dirty)
-    ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
-    if [[ -n $dirty ]]; then
-      prompt_segment red black
-    else
-      prompt_segment green black
-    fi
-
-    if [[ -e "${repo_path}/BISECT_LOG" ]]; then
-      mode=" <B>"
-    elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
-      mode=" >M<"
-    elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
-      mode=" >R>"
-    fi
-
-    setopt promptsubst
-    autoload -Uz vcs_info
-
-    zstyle ':vcs_info:*' enable git
-    zstyle ':vcs_info:*' get-revision true
-    zstyle ':vcs_info:*' check-for-changes true
-    zstyle ':vcs_info:*' stagedstr '✚'
-    zstyle ':vcs_info:*' unstagedstr '●'
-    zstyle ':vcs_info:*' formats ' %u%c'
-    zstyle ':vcs_info:*' actionformats ' %u%c'
-    vcs_info
-    echo -n "${ref/refs\/heads\//$PL_BRANCH_CHAR }${vcs_info_msg_0_%% }${mode}"
+    promp_git_status
+    promp_git_where
   fi
+
+  # (( $+commands[git] )) || return
+  # local PL_BRANCH_CHAR
+  # () {
+  #   local LC_ALL="" LC_CTYPE="en_US.UTF-8"
+  #   PL_BRANCH_CHAR=$'\ue0a0'         # 
+  # }
+  # local ref dirty mode repo_path
+  # repo_path=$(git rev-parse --git-dir 2>/dev/null)
+
+  # if $(git rev-parse --is-inside-work-tree >/dev/null 2>&1); then
+  #   dirty=$(parse_git_dirty)
+  #   ref=$(git symbolic-ref HEAD 2> /dev/null) || ref="➦ $(git rev-parse --short HEAD 2> /dev/null)"
+  #   if [[ -n $dirty ]]; then
+  #     prompt_segment red black
+  #   else
+  #     prompt_segment green black
+  #   fi
+
+  #   if [[ -e "${repo_path}/BISECT_LOG" ]]; then
+  #     mode=" <B>"
+  #   elif [[ -e "${repo_path}/MERGE_HEAD" ]]; then
+  #     mode=" >M<"
+  #   elif [[ -e "${repo_path}/rebase" || -e "${repo_path}/rebase-apply" || -e "${repo_path}/rebase-merge" || -e "${repo_path}/../.dotest" ]]; then
+  #     mode=" >R>"
+  #   fi
+
+  #   setopt promptsubst
+  #   autoload -Uz vcs_info
+
+  #   zstyle ':vcs_info:*' enable git
+  #   zstyle ':vcs_info:*' get-revision true
+  #   zstyle ':vcs_info:*' check-for-changes true
+  #   zstyle ':vcs_info:*' stagedstr '✚'
+  #   zstyle ':vcs_info:*' unstagedstr '●'
+  #   zstyle ':vcs_info:*' formats ' %u%c'
+  #   zstyle ':vcs_info:*' actionformats ' %u%c'
+  #   vcs_info
+  #   echo -n "${ref/refs\/heads\//$PL_BRANCH_CHAR }${vcs_info_msg_0_%% }${mode}"
+  # fi
 }
 
 prompt_bzr() {
