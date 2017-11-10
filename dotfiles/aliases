@@ -5,3 +5,5 @@ alias vup="vagrant up && vagrant provision && notifyDone && vagrant ssh"
 alias vu='vagrant up && notifyDone'
 alias vhalt='vagrant halt'
 alias vssh='vagrant ssh'
+
+alias glp='git pull --prune'
