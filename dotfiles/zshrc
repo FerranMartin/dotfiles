@@ -48,7 +48,7 @@ autoload bashcompinit
 bashcompinit
 source ~/.dotfiles/scripts/wp-completion.bash
 
-source $(brew --prefix php-version)/php-version.sh && php-version 5
+source $(brew --prefix php-version)/php-version.sh && php-version 7
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
@@ -57,3 +57,5 @@ eval $(thefuck --alias)
 
 # Use awesome terminal fonts (needs previous instalation: https://github.com/gabrielelana/awesome-terminal-fonts#how-to-install-osx)
 source ~/.fonts/*.sh
+
+export PATH="$HOME/.yarn/bin:$PATH"
