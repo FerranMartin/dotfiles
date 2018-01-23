@@ -17,6 +17,8 @@ apps=(
  dropbox
  spotify
  sublime-text
+ macdown
+ atom
 )
 
 # Install apps to /Applications
