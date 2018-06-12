@@ -16,15 +16,39 @@
   dump = cat-file -p
   dt = difftool
   dm = diffmerge
-	switch = !legit switch \"$@\"
-	branches = !legit branches
-	sprout = !legit sprout \"$@\"
-	unpublish = !legit unpublish \"$@\"
-	harvest = !legit harvest \"$@\"
-	sync = !legit sync \"$@\"
-	publish = !legit publish \"$@\"
-	graft = !legit graft \"$@\"
-    integrate = "!f() { git co $2; git pull; git fetch -p; git br -d $1 }; f"
+  
+  # Integrate in local
+  integrate = "!f() { git co $2; git pull; git fetch -p; git br -d $1 }; f"
+  
+  # Get the current branch name (not so useful in itself, but used in
+  # other aliases)
+  branch-name = "!git rev-parse --abbrev-ref HEAD"
+
+  # Create sub-branch from the current branch. current_branch --> current_branch__sub_branch
+  create-sub-branch = "!f() { git checkout -b \"$(git branch-name)__${1-sub}\"; }; f"
+  csb = "!git sub-branch"
+
+  # Go to sub-branch from the current branch. current_branch --> current_branch__sub_branch
+  go-sub-branch = "!f() { git checkout \"$(git branch-name)__${1-sub}\"; }; f"
+  gsb = "!git go-sub-branch"
+
+  # Return to parent branch
+  go-parent = "!f() { parent=$(echo \"$(git branch-name)\" | sed 's/__[^__]*$//'); git checkout $parent; }; f"
+  p="!git go-parent"
+
+  # Push the current branch to the remote "origin", and set it to track
+  # the upstream branch
+  publish = "!git push -u origin $(git branch-name)"
+  # Delete the remote version of the current branch
+  unpublish = "!git push origin :$(git branch-name)"
+
+  # Delete any branches that have been merged into master
+  # See also: https://gist.github.com/robmiller/5133264
+  delete-merged-branches = "!git co master && git branch --merged | grep -v '\\*' | xargs -n 1 git branch -d"
+
+  # Will create a commit in case of fire in the building and push it to a "fire-branch" to avoid merge conflicts
+  fire = "!git add -A && git commit -m 'FIRE FIRE FIRE' && git push origin fire-branch"
+  
 [diff]
 	tool = diffmerge
 [difftool "diffmerge"]
