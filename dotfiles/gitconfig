@@ -26,7 +26,7 @@
 
   # Create sub-branch from the current branch. current_branch --> current_branch__sub_branch
   create-sub-branch = "!f() { git checkout -b \"$(git branch-name)__${1-sub}\"; }; f"
-  csb = "!git sub-branch"
+  csb = "!git create-sub-branch"
 
   # Go to sub-branch from the current branch. current_branch --> current_branch__sub_branch
   go-sub-branch = "!f() { git checkout \"$(git branch-name)__${1-sub}\"; }; f"
