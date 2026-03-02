@@ -25,6 +25,13 @@ fi
 export FZF_DEFAULT_OPTS="--color=$fzf_colors --reverse"
 
 # ------------------------------------------------------------------------------
+# NVM (Node Version Manager)
+# ------------------------------------------------------------------------------
+export NVM_DIR="$HOME/.nvm"
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+
+# ------------------------------------------------------------------------------
 # Path - The higher it is, the more priority it has
 # ------------------------------------------------------------------------------
 path=(
