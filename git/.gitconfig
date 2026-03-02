@@ -1,5 +1,11 @@
 # This is Git's per-user configuration file.
 [user]
-# Please adapt and uncomment the following lines:
-#	name = Ferran Martín
-#	email = ferranmatin@gmail.com
+	name = Ferran Martín
+	email = ferranmatin@gmail.com
+[alias]
+    co = checkout
+    ci = commit
+    st = status
+    br = branch
+    branch-name = "!git rev-parse --abbrev-ref HEAD"
+    publish = "!git push -u origin $(git branch-name)"
