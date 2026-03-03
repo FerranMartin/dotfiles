@@ -19,6 +19,7 @@ brew "zsh"
 brew "denisidoro/tools/docpars"
 cask "font-hack-nerd-font"
 cask "ghostty"
+cask "telegram"
 cask "zoom"
 mas "Keynote", id: 409183694
 mas "Numbers", id: 409203825
